@@ -1,0 +1,24 @@
+name: 'Sourcetoad - PHPUnit Code Coverage'
+description: 'Enforces code coverage percent from a clover export'
+author: Sourcetoad
+branding:
+  color: 'purple'
+  icon: 'file-text'
+
+inputs:
+  clover_report_path:
+    description: 'Report to Clover Coverage XML Report'
+    required: true
+  min_coverage_percent:
+    description: 'Coverage percent (minimum to enforce)'
+    required: true
+  fail_build_on_under:
+    description: 'Whether to fail the build if coverage too low.'
+    required: true
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.clover_report_path }}
+    - ${{ inputs.min_coverage_percent }}
+    - ${{ inputs.fail_build_on_under }}

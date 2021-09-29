@@ -1,0 +1,21 @@
+{
+    "name": "sourcetoad/phpunit-coverage-action-sample",
+    "description": "A sample package to test coverage",
+    "type": "project",
+    "require": {
+        "php": "^8.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sourcetoad\\PhpunitCoverageActionSample\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "minimum-stability": "stable"
+}

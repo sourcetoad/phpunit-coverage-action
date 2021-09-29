@@ -1,0 +1,48 @@
+name: sourcetoad/phpunit-coverage-action
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          extensions: dom, bcmath
+          coverage: xdebug
+
+      - name: Install dependencies
+        working-directory: sample
+        run: composer install --no-suggest --no-interaction --optimize-autoloader
+
+      - name: Run tests
+        working-directory: sample
+        run: vendor/bin/phpunit --coverage-clover=output.xml
+
+      - name: Coverage Test
+        uses: ./
+        with:
+          clover_report_path: sample/output.xml
+          min_coverage_percent: 50
+          fail_build_on_under: true
+
+      - name: Coverage Test (Fail)
+        uses: ./
+        with:
+          clover_report_path: sample/output.xml
+          min_coverage_percent: 100
+          fail_build_on_under: false
